@@ -1,0 +1,7 @@
+fastapi==0.141.1
+uvicorn==0.52.1
+librosa==0.11.0
+numpy==2.4.6
+shazamio==0.8.1
+music21==10.5.0
+python-multipart
