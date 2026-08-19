@@ -1,4 +1,11 @@
 render.yaml
 __pycache__/
-*.pyc
+*.py[cod]
+*.wav
+*.mp3
+*.tmp
+*.log
+.env
+venv/
+.venv/
 .env

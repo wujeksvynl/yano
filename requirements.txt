@@ -4,4 +4,8 @@ librosa==0.11.0
 numpy==2.4.6
 shazamio==0.8.1
 music21==10.5.0
-python-multipart
+python-multipart==0.0.20
+scipy
+SpeechRecognition==3.14.3
+pydub==0.25.1
+soundfile==0.14.0

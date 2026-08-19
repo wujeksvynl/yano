@@ -18,7 +18,7 @@ def extract_intervals_from_part(part):
     for i in range(1, len(notes)):
         intervals.append(notes[i] - notes[i-1])
         
-    return intervals
+    return intervals, notes
 
 def build_db():
     print("Starte Datenbank-Aufbau (music21)...")
@@ -58,8 +58,34 @@ def build_db():
                 if not parts:
                     continue
                     
+                
+                # Extract key
+                try:
+                    key_obj = score.analyze('key')
+                    key_str = f"{key_obj.tonic.name} {key_obj.mode}"
+                except:
+                    key_str = None
+                    
+                # Extract chords
+                chord_sequence = []
+                try:
+                    chords = score.chordify()
+                    for c in chords.flatten().getElementsByClass(chord.Chord):
+                        rn = c.root().name
+                        quality = c.quality
+                        if quality == 'major':
+                            chord_name = rn
+                        elif quality == 'minor':
+                            chord_name = f"{rn}m"
+                        else:
+                            chord_name = f"{rn}{quality}"
+                        if not chord_sequence or chord_sequence[-1] != chord_name:
+                            chord_sequence.append(chord_name)
+                except:
+                    pass
+
                 melody_part = parts[0]
-                intervals = extract_intervals_from_part(melody_part)
+                intervals, midi_notes = extract_intervals_from_part(melody_part)
                 
                 # Only add if we found a meaningful melody
                 if len(intervals) > 10:
@@ -74,7 +100,10 @@ def build_db():
                         "id": item_id,
                         "composer": composer.capitalize(),
                         "piece": title,
+                        "key": key_str,
+                        "chords": chord_sequence,
                         "intervals": intervals,
+                        "midi_notes": midi_notes,
                         "midi_file": f"/static/midi/{midi_filename}"
                     })
                     count += 1
